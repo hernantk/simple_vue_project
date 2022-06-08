@@ -21,7 +21,7 @@ const newChallenge = () => {
 const onValidate = () => {
   if (responseUser.value == response.value) {
     points.value++
-    responseUser.value = ''
+    responseUser.value = null
     newChallenge()
   }
 }
@@ -39,6 +39,7 @@ export default {
       firstNumber,
       secondNumber,
       operation,
+      responseUser,
       points,
       newChallenge,
       onValidate,
@@ -110,7 +111,7 @@ export default {
       <div class='border_item' style="display: flex; flex-direction: column; gap: 4vw; height: 30%;padding: 2vw;">
         <div style="display: flex; align-items: center; justify-content: center; gap:0.8vw;">
           <text class="title" style="color: white;"> Voce tem </text>
-          <text id='id_ponto' style="color: white;" class="title"> {{points}} </text>
+          <text id='id_ponto' style="color: white;" class="title"> {{ points }} </text>
           <text class="title" style="color: white;"> pontos </text>
         </div>
 
@@ -134,8 +135,8 @@ export default {
           Sua Resposta :
         </text>
         <div style="display: flex;  gap: 3vw; justify-content: center;  ">
-          <input class="center_item tag_item" style="width: 30%;" type='number' value="{{ answer }}"
-            @input="updateAnswer($event)" />
+          <input class="center_item tag_item" style="width: 30%; text-align: center;" type='number'
+            value={{responseUser}} @input="updateAnswer($event)" />
         </div>
       </div>
       <button type="button" @click="onValidate" style="
