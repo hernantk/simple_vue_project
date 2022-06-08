@@ -1,4 +1,51 @@
-<script setup>
+<script >
+import { ref } from 'vue'
+
+
+const listOperation = ['+', '-', '/', '*']
+const firstNumber = ref(0)
+const secondNumber = ref(0)
+const operation = ref(0)
+const points = ref(0)
+
+const responseUser = ref(0)
+const response = ref(0)
+
+const newChallenge = () => {
+  firstNumber.value = Math.floor(Math.random() * 10)
+  secondNumber.value = Math.floor(Math.random() * 10)
+  operation.value = listOperation[Math.floor(Math.random() * 3)]
+  response.value = eval(`${firstNumber.value} ${operation.value} ${secondNumber.value}`)
+}
+
+const onValidate = () => {
+  if (responseUser.value == response.value) {
+    points.value++
+    responseUser.value = ''
+    newChallenge()
+  }
+}
+
+const updateAnswer = (event) => {
+  responseUser.value = event.target.value
+}
+
+export default {
+  created() {
+    newChallenge()
+  },
+  setup() {
+    return {
+      firstNumber,
+      secondNumber,
+      operation,
+      points,
+      newChallenge,
+      onValidate,
+      updateAnswer,
+    }
+  }
+}
 
 </script>
 
@@ -17,7 +64,8 @@
       <article style="display: flex; flex-direction: column; padding-left: 4vw; padding-right: 4vw; padding-top: 1vw;">
         <img src='./assets/banner.jpg'
           style="height: 250px; word-wrap: normal; border-radius: 10px; object-fit: cover; " />
-        <div style="display: flex; flex-direction: column; gap: 1vw; padding-left: 1vw; padding-right: 1vw; padding-top: 1vw;">
+        <div
+          style="display: flex; flex-direction: column; gap: 1vw; padding-left: 1vw; padding-right: 1vw; padding-top: 1vw;">
           <text class='title'>Para ser muito bom amanha é preciso começar a práticar hoje</text>
           <div class="border_item" style="display: flex; gap: 2vw;padding-bottom: 1vw;">
             <text class='text_item'> Prof. Cleiton</text>
@@ -62,22 +110,23 @@
       <div class='border_item' style="display: flex; flex-direction: column; gap: 4vw; height: 30%;padding: 2vw;">
         <div style="display: flex; align-items: center; justify-content: center; gap:0.8vw;">
           <text class="title" style="color: white;"> Voce tem </text>
-          <text id='id_ponto' style="color: white;" class="title"> 0 </text>
+          <text id='id_ponto' style="color: white;" class="title"> {{points}} </text>
           <text class="title" style="color: white;"> pontos </text>
         </div>
 
         <button type="button" style="width: 60%; align-self: center; 
           height: 35%; background-color: var(--button-new); 
-          color: white; border-color: white; border-radius: 15px; font-size: 1.4em; font-weight: bold;">
+          color: white; border-color: white; border-radius: 15px; font-size: 1.4em; font-weight: bold;"
+          @click="newChallenge">
           Novo Desafio
         </button>
       </div>
       <div style="display:flex; flex-direction:column;justify-content: center;height: 30%; row-gap: 3vw;">
         <text style="font-size: 1.5em; color:white;  padding-left: 5vw;">Quanto é :</text>
         <div style="display: flex;  gap: 3vw; justify-content: center;  ">
-          <div class="center_item tag_item">5</div>
-          <div class="center_item tag_item">+</div>
-          <div class="center_item tag_item">5</div>
+          <div class="center_item tag_item">{{ firstNumber }}</div>
+          <div class="center_item tag_item">{{ operation }}</div>
+          <div class="center_item tag_item">{{ secondNumber }}</div>
         </div>
       </div>
       <div style="display:flex; flex-direction:column;height: 25%; row-gap: 3vw;">
@@ -85,10 +134,11 @@
           Sua Resposta :
         </text>
         <div style="display: flex;  gap: 3vw; justify-content: center;  ">
-          <div class="center_item tag_item" style="width: 30%;">10</div>
+          <input class="center_item tag_item" style="width: 30%;" type='number' value="{{ answer }}"
+            @input="updateAnswer($event)" />
         </div>
       </div>
-      <button type="button" style="
+      <button type="button" @click="onValidate" style="
           width: 60%; align-self: center; 
           height: 7.5%; background-color: var(--button-valid); 
           color: white; border-style: none; border-radius: 15px; font-size: 1.4em; font-weight: bold;">
@@ -110,6 +160,7 @@
   border-radius: 15px;
   font-weight: bold;
   font-size: 1.3em;
+
 }
 
 .center_item {
